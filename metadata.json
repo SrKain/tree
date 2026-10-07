@@ -1,0 +1,8 @@
+{
+  "name": "iasin. Hub",
+  "description": "A minimalist, editorial digital landing page reflecting high-end consulting aesthetics, precise typography, and sophisticated personal branding.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
