@@ -3,14 +3,56 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useEffect } from 'react';
 import { motion, useReducedMotion, Variants } from 'motion/react';
 import { LINKS, PROFILE } from './data/links';
 import { Header } from './components/Header';
 import { EditorialLinkRow } from './components/EditorialLinkRow';
 import { Footer } from './components/Footer';
 
+const TRACKING_PARAMS = [
+  'fbclid',
+  'gclid',
+  'igshid',
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+];
+
 export default function App() {
   const prefersReducedMotion = useReducedMotion();
+
+  /**
+   * Sanitização silenciosa de URL (Meta / Instagram In-App Browser):
+   * Quando o visitante acessa pelo link da bio do Instagram, a Meta anexa
+   * parâmetros extensos (?utm_source=ig&fbclid=...). Limpamos a barra de
+   * endereço via replaceState sem recarregar a página, garantindo que a URL
+   * permaneça limpa (https://tree.iasin.dev.br/) caso o usuário copie ou
+   * compartilhe o endereço diretamente do navegador.
+   */
+  useEffect(() => {
+    try {
+      const currentUrl = new URL(window.location.href);
+      let modified = false;
+
+      for (const param of TRACKING_PARAMS) {
+        if (currentUrl.searchParams.has(param)) {
+          currentUrl.searchParams.delete(param);
+          modified = true;
+        }
+      }
+
+      if (modified) {
+        const cleanSearch = currentUrl.searchParams.toString();
+        const cleanUrl = `${currentUrl.pathname}${cleanSearch ? `?${cleanSearch}` : ''}${currentUrl.hash}`;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    } catch {
+      // Ignora silenciosamente em ambientes restritos de WebView
+    }
+  }, []);
 
   const listVariants: Variants = {
     hidden: { opacity: 0 },
