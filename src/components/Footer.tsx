@@ -5,12 +5,12 @@ import { BrandMark } from './BrandMark';
 
 interface FooterProps {
   profile: BrandProfile;
-  isReady: boolean;
+  isReady?: boolean;
 }
 
-const EDITORIAL_EASE: [number, number, number, number] = [0.77, 0, 0.175, 1];
+const EDITORIAL_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export const Footer: React.FC<FooterProps> = ({ profile, isReady }) => {
+export const Footer: React.FC<FooterProps> = ({ profile, isReady = true }) => {
   const [copied, setCopied] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
@@ -18,7 +18,7 @@ export const Footer: React.FC<FooterProps> = ({ profile, isReady }) => {
     try {
       await navigator.clipboard.writeText(profile.websiteUrl);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      window.setTimeout(() => setCopied(false), 2500);
     } catch {
       const textarea = document.createElement('textarea');
       textarea.value = profile.websiteUrl;
@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ profile, isReady }) => {
       document.execCommand('copy');
       document.body.removeChild(textarea);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      window.setTimeout(() => setCopied(false), 2500);
     }
   };
 
@@ -61,55 +61,104 @@ export const Footer: React.FC<FooterProps> = ({ profile, isReady }) => {
 
   return (
     <motion.footer
-      initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 12 }}
-      animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: prefersReducedMotion ? 0 : 12 }}
+      initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 8 }}
+      animate={
+        isReady
+          ? { opacity: 1, y: 0 }
+          : { opacity: 0, y: prefersReducedMotion ? 0 : 8 }
+      }
       transition={{
-        delay: prefersReducedMotion ? 0 : 0.55,
-        duration: prefersReducedMotion ? 0.2 : 0.6,
+        delay: prefersReducedMotion ? 0 : 0.12,
+        duration: prefersReducedMotion ? 0.01 : 0.35,
         ease: EDITORIAL_EASE,
       }}
-      className="w-full pt-10 sm:pt-12 pb-4 flex flex-col gap-6"
+      className="w-full pt-8 sm:pt-10 pb-4 flex flex-col gap-6"
     >
-      {/* Subtle Graphic Dash */}
-      <div className="flex items-center justify-between" aria-hidden="true">
-        <span className="w-6 h-[1px] bg-[#D4D4D0] inline-block" />
-        <span className="w-1 h-1 rounded-full bg-[#8F8F8A] inline-block" />
-      </div>
+      {/* Utilidades Editoriais Discretas (Alvos de toque >= 44px para acessibilidade mobile) */}
+      <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 border-b border-border-hairline pb-5">
+        <span className="font-mono text-[11px] tracking-[0.04em] text-text-muted select-none">
+          utilidades
+        </span>
 
-      {/* Bottom Signature Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-baseline gap-3">
-          <BrandMark size="sm" />
-          <span aria-hidden="true" className="text-[#C7C6C1] text-xs select-none">
-            —
-          </span>
-          <span className="text-[11.5px] font-normal text-[#8F8F8A] tabular-nums">
-            © {profile.copyrightYear} iasin.
-          </span>
-        </div>
-
-        {/* Quiet Digital Business Card Utilities (unboxed editorial text) */}
-        <div className="flex items-center gap-2.5 text-[11.5px] text-[#8F8F8A]">
+        <div className="flex items-center gap-3 text-[12.5px] text-text-secondary">
           <button
             type="button"
             onClick={handleDownloadVCard}
-            className="hover:text-[#0A0A0A] focus-visible:outline-none focus-visible:text-[#0A0A0A] focus-visible:underline transition-colors duration-150 cursor-pointer whitespace-nowrap"
+            className="min-h-[44px] px-1 inline-flex items-center hover:text-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary rounded-[2px] transition-colors duration-150 cursor-pointer whitespace-nowrap"
             aria-label="Salvar contato de Kauan Iasin em formato vCard"
           >
-            salvar contato
+            <span className="underline decoration-border-strong underline-offset-4 hover:decoration-accent-primary transition-colors duration-150">
+              salvar contato
+            </span>
           </button>
-          <span aria-hidden="true" className="text-[#D4D4D0]">
+
+          <span aria-hidden="true" className="text-border-strong select-none">
             ·
           </span>
+
           <button
             type="button"
             onClick={handleCopyUrl}
-            className="hover:text-[#0A0A0A] focus-visible:outline-none focus-visible:text-[#0A0A0A] focus-visible:underline transition-colors duration-150 cursor-pointer whitespace-nowrap"
-            aria-label="Copiar endereço do site iasin.dev.br"
+            className="min-h-[44px] px-1 inline-flex items-center gap-1.5 hover:text-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary rounded-[2px] transition-colors duration-150 cursor-pointer whitespace-nowrap"
+            aria-label={
+              copied
+                ? 'Endereço iasin.dev.br copiado para a área de transferência'
+                : 'Copiar endereço do site iasin.dev.br'
+            }
           >
-            {copied ? 'copiado.' : 'copiar site'}
+            {copied ? (
+              <>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="stroke-accent-primary shrink-0"
+                >
+                  <path
+                    d="M2.5 8.5L6.5 12.5L13.5 4.5"
+                    strokeWidth="1.5"
+                    strokeLinecap="square"
+                  />
+                </svg>
+                <span className="text-accent-primary font-medium">
+                  endereço copiado
+                </span>
+              </>
+            ) : (
+              <span className="underline decoration-border-strong underline-offset-4 hover:decoration-accent-primary transition-colors duration-150">
+                copiar site
+              </span>
+            )}
           </button>
+
+          {/* Região live para leitores de tela */}
+          <span className="sr-only" role="status" aria-live="polite">
+            {copied ? 'Endereço https://iasin.dev.br copiado com sucesso.' : ''}
+          </span>
         </div>
+      </div>
+
+      {/* Identificação e Assinatura Institucional da Marca */}
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pt-1">
+        <div className="flex items-baseline gap-2.5">
+          <BrandMark size="sm" accentPeriod />
+          <span
+            aria-hidden="true"
+            className="text-border-strong text-xs select-none"
+          >
+            —
+          </span>
+          <p className="text-[12.5px] font-serif italic tracking-[0.01em] text-text-secondary">
+            {profile.signature}
+          </p>
+        </div>
+
+        <span className="font-mono text-[11px] text-text-muted tabular-nums">
+          © {profile.copyrightYear} iasin.
+        </span>
       </div>
     </motion.footer>
   );

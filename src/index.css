@@ -1,22 +1,66 @@
 @import "tailwindcss";
 
+/*
+ * ============================================================================
+ * iasin. DESIGN TOKENS & BRAND SYSTEM
+ * ============================================================================
+ * Nota de governança:
+ * - Cor institucional homologada: Cobre Terroso (#8B4937)
+ * - Cores documentadas (provisórias, sujeitas a evolução institucional):
+ *   Off-white (#F8F7F5), Grafite (#222326), Azul Profundo (#172B42)
+ * - Tipografia padronizada no ecossistema digital (provisória até homologação
+ *   definitiva no Brand Guide): Instrument Serif (Wordmark), Plus Jakarta Sans
+ *   (Interface/Editorial) e JetBrains Mono (Índices Tabulares).
+ */
+
 @theme {
+  /* Tipografia */
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif: "Instrument Serif", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Paleta da Marca (Tokens Base) */
+  --color-brand-copper: #8B4937;
+  --color-brand-copper-subtle: #F3ECE9;
+  --color-brand-offwhite: #F8F7F5;
+  --color-brand-graphite: #222326;
+  --color-brand-navy: #172B42;
+
+  /* Tokens Semânticos de Superfície */
+  --color-bg-primary: #F8F7F5;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-interactive: #F1EFEA;
+
+  /* Tokens Semânticos de Texto (Validados para WCAG 2.2 AA sobre #F8F7F5) */
+  --color-text-primary: #222326;   /* ~14.8:1 contraste */
+  --color-text-secondary: #4E5056; /* ~7.5:1 contraste */
+  --color-text-muted: #63666D;     /* ~5.3:1 contraste (acima de 4.5:1 AA) */
+
+  /* Tokens Semânticos de Acento e Estado */
+  --color-accent-primary: #8B4937; /* ~5.65:1 contraste (acima de 4.5:1 AA) */
+  --color-accent-institutional: #172B42;
+
+  /* Tokens Semânticos de Estrutura e Divisórias (1px arquitetônico) */
+  --color-border-hairline: #E2DFD9;
+  --color-border-strong: #C9C5BC;
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
-    background-color: #FAF9F7;
-    color: #0A0A0A;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
-  /* Respect user motion preferences */
+  ::selection {
+    background-color: var(--color-brand-copper);
+    color: var(--color-brand-offwhite);
+  }
+
+  /* Respeito estrito à preferência de movimento reduzido (WCAG 2.2 AA) */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -30,5 +74,5 @@
 }
 
 .ease-editorial {
-  transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }

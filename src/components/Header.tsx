@@ -5,12 +5,12 @@ import { BrandMark } from './BrandMark';
 
 interface HeaderProps {
   profile: BrandProfile;
-  isReady: boolean;
+  isReady?: boolean;
 }
 
-const EDITORIAL_EASE: [number, number, number, number] = [0.77, 0, 0.175, 1];
+const EDITORIAL_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export const Header: React.FC<HeaderProps> = ({ profile, isReady }) => {
+export const Header: React.FC<HeaderProps> = ({ profile, isReady = true }) => {
   const prefersReducedMotion = useReducedMotion();
 
   const headerContainerVariants: Variants = {
@@ -18,8 +18,8 @@ export const Header: React.FC<HeaderProps> = ({ profile, isReady }) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: prefersReducedMotion ? 0 : 0.08,
-        delayChildren: prefersReducedMotion ? 0 : 0.05,
+        staggerChildren: prefersReducedMotion ? 0 : 0.04,
+        delayChildren: 0,
       },
     },
   };
@@ -27,13 +27,13 @@ export const Header: React.FC<HeaderProps> = ({ profile, isReady }) => {
   const itemVariants: Variants = {
     hidden: {
       opacity: 0,
-      y: prefersReducedMotion ? 0 : 16,
+      y: prefersReducedMotion ? 0 : 8,
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: prefersReducedMotion ? 0.2 : 0.6,
+        duration: prefersReducedMotion ? 0.01 : 0.35,
         ease: EDITORIAL_EASE,
       },
     },
@@ -44,56 +44,47 @@ export const Header: React.FC<HeaderProps> = ({ profile, isReady }) => {
       variants={headerContainerVariants}
       initial="hidden"
       animate={isReady ? 'visible' : 'hidden'}
-      className="w-full flex flex-col items-start pt-2 pb-8 sm:pb-10"
+      className="w-full flex flex-col items-start pt-1 pb-7 sm:pb-9"
     >
-      {/* Top architectural graphic motif: precision dot + fine line */}
+      {/* 1. Identidade iasin. + Localização discreta no topo arquitetônico */}
       <motion.div
         variants={itemVariants}
-        className="w-full flex items-center justify-between mb-10 sm:mb-12"
-        aria-hidden="true"
+        className="w-full flex items-baseline justify-between gap-4 pb-6 sm:pb-7 border-b border-border-hairline"
       >
-        <div className="flex items-center gap-2.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0A0A0A] inline-block" />
-          <span className="w-8 h-[1px] bg-[#D4D4D0] inline-block" />
-        </div>
-        <span className="font-mono text-[11px] tracking-[0.08em] text-[#8A8A85] tabular-nums">
-          {profile.location}
-        </span>
-      </motion.div>
-
-      {/* Primary Brand Mark: iasin. */}
-      <motion.div variants={itemVariants} className="mb-6 sm:mb-7">
         <a
           href={profile.websiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAF9F7] transition-opacity duration-200 hover:opacity-75"
-          aria-label="iasin. — Website oficial"
+          className="group inline-flex items-baseline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-4 focus-visible:ring-offset-bg-primary transition-opacity duration-150 hover:opacity-85"
+          aria-label="iasin. — Acessar website institucional iasin.dev.br"
         >
-          <BrandMark size="md" />
+          <BrandMark size="md" accentPeriod />
         </a>
+
+        <span className="font-mono text-[11px] tracking-[0.06em] text-text-muted tabular-nums shrink-0">
+          {profile.location}
+        </span>
       </motion.div>
 
-      {/* Executive Identity Lockup: Kauan Iasin & Role */}
-      <motion.div variants={itemVariants} className="w-full space-y-1.5">
-        <h1 className="text-[26px] sm:text-[30px] font-medium tracking-[-0.025em] text-[#0A0A0A] leading-[1.15] text-balance">
+      {/* 2. Identificação profissional de Kauan Iasin & 3. Especialidade / Papel profissional */}
+      <motion.div
+        variants={itemVariants}
+        className="w-full pt-6 sm:pt-7 space-y-1.5"
+      >
+        <h1 className="text-[26px] sm:text-[30px] font-semibold tracking-[-0.025em] text-text-primary leading-[1.15] text-balance">
           {profile.name}
         </h1>
-        <p className="text-[14px] sm:text-[15px] font-normal tracking-[0.01em] text-[#666662] leading-relaxed">
+        <p className="text-[14px] sm:text-[15px] font-normal tracking-[0.005em] text-text-secondary leading-relaxed">
           {profile.role}
         </p>
       </motion.div>
 
-      {/* Signature Dash Divider & Subtle Editorial Positioning */}
+      {/* 4. Posicionamento resumido */}
       <motion.div
         variants={itemVariants}
-        className="w-full mt-7 sm:mt-8 pt-6 sm:pt-7 border-t border-[#E6E5E0] flex flex-col gap-3"
+        className="w-full mt-5 sm:mt-6 pt-5 border-t border-border-hairline"
       >
-        <div className="flex items-center gap-2" aria-hidden="true">
-          <span className="w-5 h-[1px] bg-[#0A0A0A] inline-block" />
-          <span className="w-1 h-1 rounded-full bg-[#0A0A0A] inline-block" />
-        </div>
-        <p className="text-[13px] sm:text-[13.5px] font-normal text-[#73736E] leading-[1.65] max-w-[44ch]">
+        <p className="text-[13.5px] sm:text-[14px] font-normal text-text-secondary leading-[1.65] max-w-[46ch] text-pretty">
           {profile.statement}
         </p>
       </motion.div>

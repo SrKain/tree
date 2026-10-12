@@ -12,6 +12,7 @@ export interface BrandProfile {
   name: string;
   role: string;
   statement: string;
+  signature: string;
   location: string;
   whatsappRaw: string;
   websiteUrl: string;
@@ -23,6 +24,7 @@ export const PROFILE: BrandProfile = {
   name: 'Kauan Iasin',
   role: 'Technology & Business Consultant',
   statement: 'Estratégia digital, arquitetura de tecnologia e precisão executiva para negócios.',
+  signature: 'O futuro exige movimento.',
   location: 'Curitiba, BR',
   whatsappRaw: '+55 41 98788-3510',
   websiteUrl: 'https://iasin.dev.br',
